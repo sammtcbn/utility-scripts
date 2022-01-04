@@ -1,0 +1,61 @@
+#!/bin/bash
+# run a command multiple times
+# refer to https://serverfault.com/questions/273238/how-to-run-a-command-multiple-times-using-bash-shell
+ME=$(basename $0)
+number=-1
+interval=60
+
+USAGE_STR="$(cat <<EOF
+Usage: ${ME} [-c command] [-n number] [-i interval]
+    -c: command
+    -n: run times, default is infinite loop
+    -i: assign interval second, default 60
+
+EOF
+)"
+
+function usage()
+{
+    echo "$USAGE_STR"
+    exit 0
+}
+
+while getopts "c:n:i:" opt; do
+    case $opt in
+    c)
+       cmd=$OPTARG
+       ;;
+    n)
+       number=$OPTARG
+       ;;
+    i)
+       interval=$OPTARG
+       ;;
+    esac
+done
+
+if [ -z "${cmd}" ]; then
+    usage
+fi
+
+if [ $number -eq -1 ]; then
+    seq=1
+    while :
+    do
+        $cmd
+        #echo "$seq/"
+        sleep $interval
+        seq=$(($seq + 1))
+    done
+    exit 0
+fi
+
+
+for i in `seq $number`; do
+    $cmd
+    #echo "$i/$number"
+    if [ "$i" == "$number" ]; then
+        break
+    fi
+    sleep $interval
+done

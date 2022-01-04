@@ -1,0 +1,21 @@
+#!/bin/bash
+ME=$(basename $0)
+VER=0.1
+
+USAGE_STR="$(cat <<EOF
+${ME} ${VER}
+Usage: ${ME} [arithmetic expressions]
+EOF
+)"
+
+function usage()
+{
+    echo "$USAGE_STR"
+    exit 0
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+echo "${@}" | bc -l
