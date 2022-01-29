@@ -1,5 +1,16 @@
 #!/bin/bash
 # refer to https://github.com/aviaryan/utility-bash-scripts/blob/master/youtube-music
+function failed()
+{
+    echo "$*" >&2
+    exit 1
+}
+
+if [ "$1" ]; then
+    url=$1
+else
+    failed "url is needed"
+fi
 
 if [ ! -d ~/Downloads/Music ]; then
     mkdir -p ~/Downloads/Music
@@ -17,9 +28,9 @@ fi
 
 # download
 if hash aria2c 2> /dev/null; then
-    youtube-dl --prefer-ffmpeg -f 171/251/140/bestaudio --extract-audio --audio-format "$format" --audio-quality 0 --external-downloader aria2c "$1"
+    youtube-dl --prefer-ffmpeg -f 171/251/140/bestaudio --extract-audio --audio-format "$format" --audio-quality 0 --external-downloader aria2c "$url"
 else
-    youtube-dl --prefer-ffmpeg -f 171/251/140/bestaudio --extract-audio --audio-format "$format" --audio-quality 0 "$1"
+    youtube-dl --prefer-ffmpeg -f 171/251/140/bestaudio --extract-audio --audio-format "$format" --audio-quality 0 "$url"
 fi
 
 # 171 - webm 145k, 251 - webm 167k, 140 - m4a 129k
