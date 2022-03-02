@@ -8,9 +8,17 @@ destpath=
 
 function interactive_question ()
 {
-    read -p "install to remote ssh ip: [localhost] " ip
+    if [ "${ip}" == "localhost" ]; then
+        echo install to remote ssh ip: localhost
+    elif [ -z "${ip}" ]; then
+        read -p "install to remote ssh ip: [localhost] " ip
+    else
+        echo install to remote ssh ip: ${ip}
+    fi
 
-    if [ ! -z "${ip}" ]; then
+    if [ -z "${ip}" ]; then
+        ip=localhost
+    else
         read -p "login id: " id
         if [ -z "${id}" ]; then
             exit 1
@@ -24,7 +32,7 @@ function interactive_question ()
         printf "*\n"
     fi
 
-    if [ -z "${ip}" ]; then
+    if [ "${ip}" == "localhost" ]; then
         destpath=~/bin
     else
         destpath=/home/${id}/bin
@@ -36,7 +44,7 @@ function interactive_question ()
         destpath=tmppath
     fi
 
-    if [ -z "${ip}" ]; then
+    if [ "${ip}" == "localhost" ]; then
         read -p "Are you sure you want to install to ${destpath} ? [y/N] " ins
     else
         read -p "Are you sure you want to install to ${id}@${ip}:${destpath} ? [y/N] " ins
