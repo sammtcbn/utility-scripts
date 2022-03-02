@@ -1,0 +1,30 @@
+#!/bin/bash
+res=$(find . -iname "*${1}*" -not -path '*/\.git/*')
+
+if [ -z "${res}" ]; then
+    echo not found
+    exit
+fi
+
+let "cnt=0"
+
+for i in ${res}
+do
+    let "cnt++"
+done
+
+if [ $cnt -eq 1 ]; then
+    if [[ -f ${res[0]} ]]; then
+        vi ${res[0]}
+        echo ${res[0]}
+    else
+        echo not found
+        exit
+    fi
+else
+    echo "Many files were found:"
+    for i in ${res}
+    do
+        echo "$i"
+    done
+fi
