@@ -42,6 +42,7 @@ if [ $number -eq -1 ]; then
     seq=1
     while :
     do
+        date '+%Y-%m-%d %H:%M:%S'
         $cmd
         #echo "$seq/"
         sleep $interval
