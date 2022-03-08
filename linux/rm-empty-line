@@ -1,4 +1,5 @@
 #!/bin/bash
+# refer to https://www.ltsplus.com/linux/linux-files-remove-blank-lines
 ME=$(basename $0)
 
 function usage() {
@@ -13,7 +14,8 @@ if [ -z "${file}" ]; then
 fi
 
 if [ -f "${file}" ]; then
-    sed -i '/^$/d' ${file}
+    #sed -i '/^$/d' ${file}
+    sed -i '/^\s*$/d' ${file}
 elif [ -d "${file}" ]; then
     echo ${file} is not a file.
     exit 1
