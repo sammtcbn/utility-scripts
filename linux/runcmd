@@ -6,10 +6,11 @@ number=-1
 interval=60
 
 USAGE_STR="$(cat <<EOF
-Usage: ${ME} [-c command] [-n number] [-i interval]
+Usage: ${ME} [-c command] [-n number] [-i interval] [-t]
     -c: command
     -n: run times, default is infinite loop
     -i: assign interval second, default 60
+    -t: show execution time
 
 EOF
 )"
@@ -20,7 +21,7 @@ function usage()
     exit 0
 }
 
-while getopts "c:n:i:" opt; do
+while getopts "c:n:i:t" opt; do
     case $opt in
     c)
        cmd=$OPTARG
@@ -30,6 +31,9 @@ while getopts "c:n:i:" opt; do
        ;;
     i)
        interval=$OPTARG
+       ;;
+    t)
+       flag_showtime=y
        ;;
     esac
 done
@@ -42,7 +46,11 @@ if [ $number -eq -1 ]; then
     seq=1
     while :
     do
-        date '+%Y-%m-%d %H:%M:%S'
+        if  [ "$flag_showtime" = "Y" ] || [ "$flag_showtime" = "y" ]
+        then
+            date '+%Y-%m-%d %H:%M:%S'
+        fi
+
         $cmd
         #echo "$seq/"
         sleep $interval
