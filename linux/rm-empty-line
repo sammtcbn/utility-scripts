@@ -1,0 +1,22 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file]"
+    exit 1
+}
+
+file=${1}
+
+if [ -z "${file}" ]; then
+    usage
+fi
+
+if [ -f "${file}" ]; then
+    sed -i '/^$/d' ${file}
+elif [ -d "${file}" ]; then
+    echo ${file} is not a file.
+    exit 1
+else
+    usage
+fi
