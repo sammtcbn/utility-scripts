@@ -1,0 +1,22 @@
+#!/bin/bash
+# refer to https://stackoverflow.com/questions/268680/how-can-i-monitor-the-thread-count-of-a-process-on-linux
+ME=$(basename $0)
+
+USAGE_STR="$(cat <<EOF
+Usage: ${ME} [pid]
+EOF
+)"
+
+function usage()
+{
+    echo "$USAGE_STR"
+    exit 0
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+
+pid=${1}
+
+ps huH p ${pid} | wc -l
