@@ -1,0 +1,18 @@
+#!/bin/bash
+function failed()
+{
+    echo "$*" >&2
+    exit 1
+}
+
+if [ "$1" ]; then
+    path=$1
+    if [ -d ${path} ]; then
+
+        du -hs ${path}/* | sort -h
+    else
+	du -hs ${path} | sort -h
+    fi
+else
+    du -hs * | sort -h
+fi
