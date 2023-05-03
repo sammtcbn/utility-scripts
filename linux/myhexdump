@@ -1,0 +1,36 @@
+#!/bin/bash
+ME=$(basename $0)
+VER=0.1
+
+USAGE_STR="$(cat <<EOF
+${ME} ${VER}
+Usage: ${ME} [File] [Start_Offset] [Length]
+EOF
+)"
+
+function usage()
+{
+    echo "$USAGE_STR"
+    exit 0
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+fn=${1}
+
+if [ ! -z "${2}" ]; then
+    startoffset=${2}
+fi
+
+if [ ! -z "${3}" ]; then
+    length=${3}
+fi
+
+if [ ! -z "${length}" ]; then
+    hexdump -C -v ${fn} -s ${startoffset} -n ${length}
+elif [ ! -z "${startoffset}" ]; then
+    hexdump -C -v ${fn} -s ${startoffset}
+else
+    hexdump -C -v ${fn}
+fi
