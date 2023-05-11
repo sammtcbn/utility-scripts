@@ -1,0 +1,27 @@
+#!/bin/bash
+# refer to https://stackoverflow.com/questions/407523/escape-a-string-for-a-sed-replace-pattern
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file] [old string] [new string]"
+    exit 1
+}
+
+file=${1}
+oldstr=${2}
+newstr=${3}
+
+if [ -z "${file}" ] || [ -z "${oldstr}" ] || [ -z "${newstr}" ]
+then
+    usage
+fi
+
+if [ ! -e $file ]; then
+    echo "$file does not exist"
+    exit 1
+fi
+
+ESCAPED_OLD_STR=$(printf '%s\n' "$oldstr" | sed -e 's/[]\/$*.^[]/\\&/g');
+ESCAPED_NEW_STR=$(printf '%s\n' "$newstr" | sed -e 's/[]\/$*.^[]/\\&/g');
+
+sed -i "s/$ESCAPED_OLD_STR/$ESCAPED_NEW_STR/g" ${file}
