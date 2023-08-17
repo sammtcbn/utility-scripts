@@ -1,0 +1,30 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [search_string] [search_file]"
+    exit 1
+}
+
+str=${1}
+destfile=${2}
+
+if [ -z "${str}" ] || [ -z "${destfile}" ]
+then
+    usage
+fi
+
+if [ ! -e $destfile ]; then
+    echo "$destfile does not exist"
+    exit 1
+fi
+
+number=$(awk "/${str}/{ print NR; exit }" ${destfile})
+
+if [ -z "${number}" ]; then
+    number=-1
+    echo $number
+    exit 1
+else
+    echo $number
+fi
