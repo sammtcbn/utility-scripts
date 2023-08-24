@@ -1,0 +1,21 @@
+#!/bin/bash
+# If want to run for many files, you can run like as
+# find . -maxdepth 1 -type f \( ! -name . \) -exec bash -c "showdupline {}" \;
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [file]"
+    exit 1
+}
+
+fn=${1}
+if [ -z "${fn}" ]; then
+    usage
+fi
+
+if [[ ! -f ${fn} ]]; then
+    echo ${fn} not found
+    exit 1
+fi
+
+sort ${fn} | uniq -d
