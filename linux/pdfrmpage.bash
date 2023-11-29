@@ -49,16 +49,16 @@ tmpfile=${pdffile}.$(uuidgen -r).pdf
 
 if [ $pageno -eq 1 ]; then
     echo "remove first page"
-    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 2-end output ${tmpfile}
+    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 2-end output ${tmpfile} || exit 1
 elif [ $pageno -eq $page_count ]; then
     echo "remove last page"
-    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-r2 output ${tmpfile}
+    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-r2 output ${tmpfile} || exit 1
 else
     firstend=$(( $pageno - 1 ))
     secondstart=$(( $pageno + 1 ))
     echo "remove page ${pageno}"
     #echo 1-${firstend} ${secondstart}-end
-    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-${firstend} ${secondstart}-end output ${tmpfile}
+    docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-${firstend} ${secondstart}-end output ${tmpfile} || exit 1
 fi
 
 if [ -e $tmpfile ]; then
