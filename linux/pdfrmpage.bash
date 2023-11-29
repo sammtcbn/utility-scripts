@@ -61,7 +61,8 @@ else
     docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-${firstend} ${secondstart}-end output ${tmpfile}
 fi
 
-rm -f ${pdffile} || exit 1
-mv ${tmpfile} ${pdffile} || exit 1
-
-echo done
+if [ -e $tmpfile ]; then
+    rm --preserve-root -f ${pdffile} || exit 1
+    mv ${tmpfile} ${pdffile} || exit 1
+    echo done
+fi
