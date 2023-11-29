@@ -9,7 +9,6 @@ function usage() {
 
 command -v pdfinfo >/dev/null 2>&1 || { echo >&2 "pdfinfo is required but not installed. Aborting."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
-command -v uuidgen >/dev/null 2>&1 || { echo >&2 "uuidgen is required but not installed. Aborting."; exit 1; }
 
 pdffile=${1}
 pageno=${2}
@@ -45,7 +44,8 @@ if [ $pageno -lt 1 ]; then
     echo "page < 1" && exit 1
 fi
 
-tmpfile=${pdffile}.$(uuidgen -r).pdf
+tmpfile=$(mktemp -u tmp.XXXXXXXXXX)
+#echo ${tmpfile}
 
 if [ $pageno -eq 1 ]; then
     echo "remove first page"
