@@ -9,6 +9,7 @@ function usage() {
 
 command -v pdfinfo >/dev/null 2>&1 || { echo >&2 "pdfinfo is required but not installed. Aborting."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
+command -v uuidgen >/dev/null 2>&1 || { echo >&2 "uuidgen is required but not installed. Aborting."; exit 1; }
 
 pdffile=${1}
 pageno=${2}
@@ -44,7 +45,7 @@ if [ $pageno -lt 1 ]; then
     echo "page < 1" && exit 1
 fi
 
-tmpfile=${pdffile}.tmp
+tmpfile=${pdffile}.$(uuidgen -r).pdf
 
 if [ $pageno -eq 1 ]; then
     echo "remove first page"
@@ -56,8 +57,11 @@ else
     firstend=$(( $pageno - 1 ))
     secondstart=$(( $pageno + 1 ))
     echo "remove page ${pageno}"
-    echo 1-${firstend} ${secondstart}-end
+    #echo 1-${firstend} ${secondstart}-end
     docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} cat 1-${firstend} ${secondstart}-end output ${tmpfile}
 fi
+
+rm -f ${pdffile} || exit 1
+mv ${tmpfile} ${pdffile} || exit 1
 
 echo done
