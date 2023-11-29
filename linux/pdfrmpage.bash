@@ -62,7 +62,7 @@ else
 fi
 
 if [ -e $tmpfile ]; then
-    rm --preserve-root -f ${pdffile} || exit 1
-    mv ${tmpfile} ${pdffile} || exit 1
+    rm --preserve-root -f "${pdffile}" || exit 1
+    mv "${tmpfile}" "${pdffile}" || exit 1
     echo done
 fi
