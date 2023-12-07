@@ -1,0 +1,45 @@
+#!/bin/bash
+# remove password from PDF file
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [pdf_file] [password]"
+    echo "       ${ME} [pdf_file] [password] [output_filename]"
+    exit 1
+}
+
+command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
+
+pdffile=${1}
+password=${2}
+outputfn=${3}
+
+if [ -z "${pdffile}" ]; then
+    usage
+fi
+
+if [ -z "${password}" ]; then
+    usage
+fi
+
+if [ -z "${outputfn}" ]; then
+    # assign output fn
+    tmpfn=$(basename -- "${pdffile}")
+    extension="${tmpfn##*.}"
+    filename="${tmpfn%.*}"
+    if [ "$filename" == "$extension" ]; then
+        # no extension , assgn to pdf
+        extension=pdf
+    fi
+    outputfn=${filename}_decoded.${extension}
+fi
+
+#echo outputfn = ${outputfn}
+
+if [ ! -e $pdffile ]; then
+    echo "$pdffile not found"
+    exit 1
+fi
+
+docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} input_pw ${password} output ${outputfn}
+
