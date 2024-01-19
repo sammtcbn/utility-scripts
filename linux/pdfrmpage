@@ -7,6 +7,11 @@ function usage() {
     exit 1
 }
 
+function show_total_page() {
+    page_count=`pdfinfo "${pdffile}" | grep 'Pages:' | awk '{print $2}'`
+    echo total page: ${page_count}
+}
+
 command -v pdfinfo >/dev/null 2>&1 || { echo >&2 "pdfinfo is required but not installed. Aborting."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
 
@@ -28,9 +33,7 @@ fi
 
 #echo ${pdffile} ${pageno}
 
-page_count=`pdfinfo "${pdffile}" | grep 'Pages:' | awk '{print $2}'`
-
-echo total page: ${page_count}
+show_total_page
 
 if [ $page_count -lt 1 ]; then
     echo "total page < 1" && exit 1
@@ -64,5 +67,6 @@ fi
 if [ -e $tmpfile ]; then
     rm --preserve-root -f "${pdffile}" || exit 1
     mv "${tmpfile}" "${pdffile}" || exit 1
+    show_total_page
     echo done
 fi
