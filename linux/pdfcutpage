@@ -1,0 +1,36 @@
+#!/bin/bash
+# cut pages from PDF file
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [pdf_input_file] [pdf_output_file] [page option]"
+    exit 1
+}
+
+command -v pdfinfo >/dev/null 2>&1 || { echo >&2 "pdfinfo is required but not installed. Aborting."; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
+
+pdfinputfile=${1}
+pdfoutputfile=${2}
+pageopt=${*:3}
+
+if [ -z "${pdfinputfile}" ]; then
+    usage
+fi
+
+if [ -z "${pdfoutputfile}" ]; then
+    usage
+fi
+
+if [ -z "${pageopt}" ]; then
+    usage
+fi
+
+if [ ! -e $pdfinputfile ]; then
+    echo "$pdfinputfile not found"
+    exit 1
+fi
+
+docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdfinputfile} cat ${pageopt} output ${pdfoutputfile}
+
+echo done
