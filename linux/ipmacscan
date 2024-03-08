@@ -1,0 +1,32 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [IP]"
+    echo "Example:"
+    echo "  ${ME} 10.0.15.0/24"
+    echo "  ${ME} 10.0.16.0/24"
+    exit 1
+}
+
+targetip=${1}
+
+if [ -z "${targetip}" ]; then
+    usage
+fi
+
+command -v nmap >/dev/null 2>&1 || { echo >&2 "nmap is required but not installed. Aborting."; exit 1; }
+command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed. Aborting."; exit 1; }
+
+sudo nmap -sn ${targetip} | \
+awk '
+/Nmap scan report/{
+  val=$NF;
+  next
+}
+/MAC Address:/{
+  sub(/.*Address: /,"");
+  sub(/ .*/,"");
+  print val,$0
+}
+'
