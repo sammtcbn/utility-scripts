@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+import os
+import sys
+
+def find_function(directory, function_name):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".py"):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    for line_num, line in enumerate(lines):
+                        if function_name in line:
+                            for i in range(line_num, len(lines)):
+                                if "def " in lines[i]:
+                                    function_line = lines[i].strip()
+                                    function_def = ' '.join(function_line.split()[1:]).split('(')[0]
+                                    if function_def == function_name:
+                                        print(f"{file_path}")
+
+def main():
+    directory = os.getcwd()
+    script_name = os.path.basename(sys.argv[0])
+
+    if len(sys.argv) != 2:
+        print(f"Usage: {script_name} function_name")
+        sys.exit(1)
+
+    function_name = sys.argv[1]
+
+    find_function(directory, function_name)
+
+if __name__ == '__main__':
+    main()
