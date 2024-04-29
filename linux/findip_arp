@@ -1,0 +1,20 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [mac_address]"
+    echo "Example:"
+    echo "  ${ME} 11:22:33:44:55:66"
+    exit 1
+}
+
+macstr=${1}
+
+if [ -z "${macstr}" ]; then
+    usage
+fi
+
+command -v arp >/dev/null 2>&1 || { echo >&2 "arp is required but not installed. Aborting."; exit 1; }
+command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed. Aborting."; exit 1; }
+
+arp -n | grep -i ${macstr} | sort -u | awk '{print $1}'

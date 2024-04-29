@@ -2,7 +2,7 @@
 ME=$(basename $0)
 
 function usage() {
-    echo "Usage: ${ME} [IP]"
+    echo "Usage: ${ME} [subnet]"
     echo "Example:"
     echo "  ${ME} 10.0.15.0/24"
     echo "  ${ME} 10.0.16.0/24"
