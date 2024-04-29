@@ -1,0 +1,23 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [mac_address] [subnet]"
+    echo "Example:"
+    echo "  ${ME} 11:22:33:44:55:66 10.0.15.0/24"
+    exit 1
+}
+
+macstr=${1}
+subnet=${2}
+
+if [ -z "${macstr}" ] || [ -z "${subnet}" ]; then
+    usage
+fi
+
+command -v nmap >/dev/null 2>&1 || { echo >&2 "nmap is required but not installed. Aborting."; exit 1; }
+command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed. Aborting."; exit 1; }
+
+[[ $UID -ne 0 ]] && { echo "this script requires root privileges" >&2; exit 1; }
+
+nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
