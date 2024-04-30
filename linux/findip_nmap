@@ -18,6 +18,9 @@ fi
 command -v nmap >/dev/null 2>&1 || { echo >&2 "nmap is required but not installed. Aborting."; exit 1; }
 command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed. Aborting."; exit 1; }
 
-[[ $UID -ne 0 ]] && { echo "this script requires root privileges" >&2; exit 1; }
+#[[ $UID -ne 0 ]] && { echo "this script requires root privileges" >&2; exit 1; }
 
-nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
+#nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
+
+# use sudo to run it here, otherwise using sudo in command line to run this script, it will fail when this script is put to ~/bin/
+sudo nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
