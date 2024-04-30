@@ -22,5 +22,9 @@ command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed.
 
 #nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
 
-# use sudo to run it here, otherwise using sudo in command line to run this script, it will fail when this script is put to ~/bin/
-sudo nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | tr -d ' ()'
+# add - use sudo to run it here, otherwise using sudo in command line to run this script, it will fail when this script is put to ~/bin/
+# add - remove leading whitespace
+# add - filter string because nmap sometimes output like
+#       xxx.xxx.xxx.xxx (192.168.1.234) or (192.168.1.234)
+#       so we just extract value from ( )
+sudo nmap -sP ${subnet} | grep -i ${macstr} -B2 | grep "Nmap scan report for" | awk 'BEGIN {FS="for"} {print $2}' | sed 's/^[ \t]*//' | grep -Po '\(\K[^)]+(?=\))'
