@@ -17,4 +17,9 @@ fi
 command -v arp >/dev/null 2>&1 || { echo >&2 "arp is required but not installed. Aborting."; exit 1; }
 command -v awk >/dev/null 2>&1 || { echo >&2 "awk is required but not installed. Aborting."; exit 1; }
 
-arp -n | grep -i ${macstr} | sort -u | awk '{print $1}'
+# method 1
+#arp -n | grep -i ${macstr} | sort -u | awk '{print $1}'
+
+# method 2
+# arp -n | awk '/11:22:33:44:55:66/ {print $1;exit}'
+arp -n | awk '/'"$macstr"'/ {print $1 ;exit}'
