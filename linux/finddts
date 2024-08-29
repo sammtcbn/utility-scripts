@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -type f \( -iname "*.dts" -o -iname "*.dtsi" \) -not -path '*/\.git/*' -print0 | xargs -0 grep -F "${1}"
