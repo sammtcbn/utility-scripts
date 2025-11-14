@@ -1,0 +1,34 @@
+#!/bin/bash
+ME=$(basename $0)
+VER=0.1
+
+USAGE_STR="$(cat <<EOF
+${ME} ${VER}
+Usage: ${ME} [File]
+EOF
+)"
+
+function usage()
+{
+    echo "$USAGE_STR"
+    exit 0
+}
+
+if [ -z "${1}" ]; then
+    usage
+fi
+fn=${1}
+
+if [ ! -e ${fn} ]; then
+    echo "${fn} not found"
+    exit 1
+fi
+
+python3 - << 'EOF' "${fn}"
+import zlib, sys
+with open(sys.argv[1], "rb") as f:
+    data = f.read()
+print(format(zlib.crc32(data) & 0xffffffff, "08X"))
+EOF
+
+
