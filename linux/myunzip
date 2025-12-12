@@ -1,0 +1,27 @@
+#!/bin/bash
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [zip_file]"
+    exit 1
+}
+
+if [ -z "$1" ]; then
+    usage
+fi
+
+zipfile="$1"
+
+# 移除副檔名取得目錄名稱
+#dirname="${zipfile%.zip}"
+
+# 取得檔名（不含路徑）
+filename="$(basename "$zipfile")"
+
+# 去掉最後一個副檔名（不管是 .zip 還是其他）
+dirname="${filename%.*}"
+
+mkdir -p "$dirname"
+
+unzip -d "$dirname" "$zipfile"
+
