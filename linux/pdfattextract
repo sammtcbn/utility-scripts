@@ -1,0 +1,29 @@
+#!/bin/bash
+# Extract attachments from PDF
+ME=$(basename $0)
+
+function usage() {
+    echo "Usage: ${ME} [pdf_file]"
+    exit 1
+}
+
+command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but not installed. Aborting."; exit 1; }
+
+pdffile=${1}
+
+if [ -z "${pdffile}" ]; then
+    usage
+fi
+
+if [ ! -e $pdffile ]; then
+    echo "$pdffile not found"
+    exit 1
+fi
+
+outfolder="${pdffile}_attachment"
+
+mkdir -p ${outfolder}
+
+docker run --rm -it --volume $(pwd):/work pdftk/pdftk:latest ${pdffile} unpack_files output ${outfolder}
+
+
