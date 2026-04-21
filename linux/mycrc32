@@ -31,4 +31,6 @@ with open(sys.argv[1], "rb") as f:
 print(format(zlib.crc32(data) & 0xffffffff, "08X"))
 EOF
 
+# or
+# python3 -c "import zlib; print('{:08X}'.format(zlib.crc32(open('${fn}', 'rb').read()) & 0xffffffff))"
 
